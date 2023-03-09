@@ -20,12 +20,8 @@ print("connected from %s" % str(address))
 pycom.rgbled(0x0000ff)
 
 while True:
-    if (clientsocket.connected()):
-        clientsocket.send("give data!")
-        print("waiting for response")
-        response = clientsocket.recv(1024)
-        print("request received %s", str(response))
-    else:
-        pycom.rgbled(0x00ff00)
-        (clientsocket, address) = serversocket.accept()
+    clientsocket.send("CO2")
+    print("waiting for response")
+    response = clientsocket.recv(1024)
+    print("request received", response.decode())
     time.sleep(3)
