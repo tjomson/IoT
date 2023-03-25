@@ -9,6 +9,6 @@ erstat 13 med id'et fra den givne proces
 
 - typing `repl` in terminal 3 will now work as a python repl (exit with ctrl X)
 
-- in terminal 3, you can now write `cpy main.py /flash/main.py` to put code on the remote pycom. Restarting the pycom is done on the IoT-lab website
+- in terminal 3, you can now write `cp main.py /flash/main.py` to put code on the remote pycom. Restarting the pycom is done on the IoT-lab website
 
 - now open vscode, and connect to wsl using the WSL extension. Use cpy to put code on the remote
