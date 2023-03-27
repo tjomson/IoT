@@ -9,7 +9,9 @@ print("starting")
 lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
 app_eui = ubinascii.unhexlify('0000000000000000')
 app_key = ubinascii.unhexlify('1257279ab3b44855ad3260a6c3123f74')
-lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
+# mac address of my Pycom, such that the one on IoT lab can also access LoRa
+dev_eui = ubinascii.unhexlify("70b3d5499f3b3b80")
+lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0)
 while not lora.has_joined():
     time.sleep(1)
     print('Not yet joined...')
