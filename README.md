@@ -12,4 +12,4 @@ Exercises and assignments for course Internet of Things, spring 2023.
 
 ## Assignments
 
-- 1: Collecting data from IoT-LAB
+- 1: [Collecting data from IoT-LAB](https://github.com/tjomson/IoT/tree/master/assignment1) ([assignment description](https://github.com/tjomson/IoT/blob/master/assignment1/assignment1-description.pdf))
