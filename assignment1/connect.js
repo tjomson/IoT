@@ -1,5 +1,4 @@
-// import {spawn} from "child_process"
-const { spawn, exec } = require("child_process")
+const { spawn } = require("child_process")
 
 async function doStuff() {
     const nodeId = process.argv[2]
@@ -13,29 +12,10 @@ async function doStuff() {
     socatProcess.on("exit", () => console.log("socat process closed"))
     await sleep(1000)
     
-    const child = spawn('rshell', [], {
-        stdio: [process.stdin, process.stdout, process.stderr],
+    spawn('rshell', ["-f ./rshell_commands.txt"], {
+        stdio: 'inherit',
         shell: true
     })
-    // child.stdin.setEncoding('utf-8');
-    // child.stdout.pipe(process.stdout);
-    // await sleep(500)
-    // child.stdin.write('echo "Hello, world!"\n');
-    // const shell = spawn('/bin/bash', [], { stdio: 'inherit' });
-    // shell.on('spawn', () => {
-    //     shell.stdin.write('echo "Hello, world!"\n');
-    // })
-
-    // rshellProcess.stdin.write('connect serial /tmp/ttyPYC0\n')
-    // console.log("yo")
-    // rshellProcess.stderr.on("data", () => {
-    //     rshellProcess.stdin.write('connect serial /tmp/ttyPYC0\n')
-    //     console.log("hej")
-    //     rshellProcess.stdin.end()
-    // })
-    // rshellProcess.on("spawn", () => {
-    //     exec('connect serial /tmp/ttyPYC0', { stdio: "inherit", cwd: rshellProcess.spawnargs[0]})
-    // })
 }
 
 function sleep(ms) {
