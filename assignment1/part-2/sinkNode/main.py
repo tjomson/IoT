@@ -1,6 +1,9 @@
+from network import Bluetooth
+import time
+
 # Define the Bluetooth service and characteristic UUIDs
-SERVICE_UUID = 'f0c5ff12-0147-44c8-8a7a-ef0a61e7d7e0'
-CHARACTERISTIC_UUID = 'b722bf9b-7a2a-43c7-b3e3-3ab3657a183f'
+SERVICE_UUID = b'1234567890123456'
+CHARACTERISTIC_UUID = b'1234567890123456'
 
 # Define the callback function to handle incoming Bluetooth connections and data
 
