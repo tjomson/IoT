@@ -9,8 +9,8 @@ CHARACTERISTIC_UUID = uhashlib.sha256("/(IUogiug)8976HJHuweasdjh/T769VYILkpp").d
 # Define the callback function to handle incoming Bluetooth connections and data
 
 
-def on_bt_rx(payload):
-    print('Received:', payload.decode())
+def on_bt_rx(gattChar, message):
+    print('Received: ', message[1].decode())
 
 print("starting")
 # Initialize the Bluetooth interface and set the device name
@@ -21,7 +21,8 @@ print("adv set")
 
 # Define the Bluetooth service and characteristic
 svc = bt.service(uuid=SERVICE_UUID, isprimary=True)
-chr = svc.characteristic(uuid=CHARACTERISTIC_UUID, value='', properties=Bluetooth.PROP_WRITE)
+chr = svc.characteristic(uuid=10903, value='default', properties=Bluetooth.PROP_WRITE)
+# chr = svc.characteristic(uuid='write_here', value='default', properties=Bluetooth.PROP_WRITE)
 print("char set")
 
 # Register the callback function to handle incoming data
@@ -34,7 +35,6 @@ print("adv started")
 
 # Wait for incoming Bluetooth connections and data
 while True:
-    print("sleeping")
     time.sleep(1)
 
 # from network import Bluetooth
