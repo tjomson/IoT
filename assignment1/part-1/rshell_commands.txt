@@ -1,3 +1,0 @@
-connect serial /tmp/ttyPYC0
-cp main.py /flash/main.py
-repl

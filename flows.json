@@ -1,0 +1,211 @@
+[
+    {
+        "id": "fd123c1f38542ede",
+        "type": "mqtt in",
+        "z": "26ed079792c2ed4f",
+        "name": "",
+        "topic": "iot2023/device/+/event/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "1fb57fe843b5cbed",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "42d0d96f3db29d61"
+            ]
+        ]
+    },
+    {
+        "id": "763642a91a893941",
+        "type": "function",
+        "z": "26ed079792c2ed4f",
+        "name": "Parse and create response",
+        "func": "//define choices\nlet choices = [\"co2\", \"humidity\", \"temperature\"];\nlet choice = choices[Math.floor(Math.random() * choices.length)];\nlet store = context.get(\"devices\");\nlet devEui = msg.payload.devEUI;\n\n// if we havent seen the device before, save it in store.\nif (!store.has(devEui)){\n    store.set(devEui, choice);\n} else if (store.get(devEui) === choice) {\n    //If choice happens to be the same choice we gave the \n    //device last time, just dont do anything\n    return null;\n}\n\n// calculate interval and wait times\nlet interval;\nswitch (choice){\n    case \"co2\":\n        interval = Math.floor(Math.random()*200);\n        break;\n    default:\n        interval = Math.floor(Math.random()*20);\n}\nlet waitTime = Math.floor(Math.random()*30)+5 \nlet data = `${choice} ${interval} ${waitTime}`;\n\n//\nreturn {\n    topic: \"iot2023/device/\" + devEui + \"/command/down\",\n\n    payload: {\n        devEui: devEui,\n        fPort: msg.payload.fPort,\n        confirmed: true,\n        data: Buffer.from(data).toString(\"base64\")\n    }\n    \n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\n// We create a map of seen devices\nif (context.get(\"devices\") === undefined) {\n    context.set(\"devices\", new Map())\n}",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 180,
+        "wires": [
+            [
+                "b313be59a9b31a75",
+                "94bc26dd69138d4b"
+            ]
+        ]
+    },
+    {
+        "id": "528a7d82acc2b953",
+        "type": "debug",
+        "z": "26ed079792c2ed4f",
+        "name": "Recieved event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "194a12b63b90e238",
+        "type": "function",
+        "z": "26ed079792c2ed4f",
+        "name": "debug parse",
+        "func": "let devId = msg.payload.deviceName\nlet m = Buffer.from(msg.payload.data, \"base64\").toString()\n\n\nreturn {payload: \"msg: \"+ m + \" recieved from: \" + devId};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 100,
+        "wires": [
+            [
+                "528a7d82acc2b953"
+            ]
+        ]
+    },
+    {
+        "id": "b313be59a9b31a75",
+        "type": "mqtt out",
+        "z": "26ed079792c2ed4f",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1fb57fe843b5cbed",
+        "x": 1150,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9e03b516b7cc7435",
+        "type": "delay",
+        "z": "26ed079792c2ed4f",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 640,
+        "y": 180,
+        "wires": [
+            [
+                "763642a91a893941",
+                "194a12b63b90e238"
+            ]
+        ]
+    },
+    {
+        "id": "94bc26dd69138d4b",
+        "type": "debug",
+        "z": "26ed079792c2ed4f",
+        "name": "Responding with",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "42d0d96f3db29d61",
+        "type": "function",
+        "z": "26ed079792c2ed4f",
+        "name": "Filter on devEui",
+        "func": "let devEuis = [\n    //Add your devices here\n    \"a7c272d88a9866cc\"\n]\n\nif (devEuis.includes(msg.payload.devEUI)){\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "9e03b516b7cc7435"
+            ]
+        ]
+    },
+    {
+        "id": "39657e0d390c3410",
+        "type": "comment",
+        "z": "26ed079792c2ed4f",
+        "name": "Add your device EUIs here!",
+        "info": "",
+        "x": 410,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "1fb57fe843b5cbed",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "influx.itu.dk",
+        "port": "8883",
+        "tls": "9112631fd97f9a7b",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "9112631fd97f9a7b",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
