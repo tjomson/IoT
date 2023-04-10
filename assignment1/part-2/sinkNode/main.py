@@ -1,6 +1,24 @@
 from network import Bluetooth
+from network import LoRa
 import time
 import uhashlib
+import socket
+import ubinascii
+
+mac = "804abcdef0abcdef"
+dev_eui = ubinascii.unhexlify(mac)
+
+lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
+app_eui = ubinascii.unhexlify('0000000000000000')
+app_key = ubinascii.unhexlify('1257279ab3b44855ad3260a6c3123f74')
+lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0)
+while not lora.has_joined():
+    time.sleep(1)
+    print('Not yet joined...')
+print("Joined")
+
+s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
+s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
 
 # Define the Bluetooth service and characteristic UUIDs
 SERVICE_UUID = uhashlib.sha256(
@@ -8,12 +26,11 @@ SERVICE_UUID = uhashlib.sha256(
 CHARACTERISTIC_UUID = uhashlib.sha256(
     "/(IUogiug)8976HJHuweasdjh/T769VYILkpp").digest()[:16]
 
-# Define the callback function to
-# handle incoming Bluetooth connections and data
-
 
 def on_bt_rx(gattChar, message):
-    print('Received: ', message[1].decode())
+    mes = message[1].decode()
+    s.send(str.encode(mes))
+    print('Sink received: ', mes)
 
 
 print("starting")
