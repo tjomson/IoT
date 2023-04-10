@@ -3,6 +3,9 @@ import time
 import machine
 import uhashlib
 
+
+identifier = 1
+
 print("starting")
 bt_out = Bluetooth()
 
@@ -13,7 +16,7 @@ while True:
     if adv:
         print(bt_out.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
         # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
-        if bt_out.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == 'sink':
+        if bt_out.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == f"tjoms_{identifier+1}":
             conn = bt_out.connect(adv.mac)
             print("isConnected: ", conn.isconnected())
             break
@@ -36,7 +39,7 @@ print("setting adv")
 bt_in = Bluetooth()
 SERVICE_UUID = uhashlib.sha256(
     "gsghrsyksvb45676ryj5768").digest()[:16]
-bt_in.set_advertisement(name='transfer', service_uuid=SERVICE_UUID)
+bt_in.set_advertisement(name=f"tjoms_{identifier}", service_uuid=SERVICE_UUID)
 
 svc = bt_in.service(uuid=SERVICE_UUID, isprimary=True)
 myChr = svc.characteristic(uuid=10904, value='default2',

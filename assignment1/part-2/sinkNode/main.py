@@ -4,6 +4,7 @@ import time
 import uhashlib
 import socket
 import ubinascii
+identifier = 2
 
 mac = "804abcdef0abcdef"
 dev_eui = ubinascii.unhexlify(mac)
@@ -37,7 +38,7 @@ print("starting")
 # Initialize the Bluetooth interface and set the device name
 bt = Bluetooth()
 print("setting adv")
-bt.set_advertisement(name='sink', service_uuid=SERVICE_UUID)
+bt.set_advertisement(name=f"tjoms_{identifier}", service_uuid=SERVICE_UUID)
 print("adv set")
 
 # Define the Bluetooth service and characteristic

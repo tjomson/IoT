@@ -4,6 +4,7 @@ import machine
 import uhashlib
 
 print("starting")
+identifier = 0
 bt = Bluetooth()
 
 print("scanning")
@@ -13,7 +14,7 @@ while True:
     if adv:
         print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
         # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
-        if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == 'transfer':
+        if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == f"tjoms_{identifier+1}":
             print(adv.mac)
             conn = bt.connect(adv.mac)
             print("isConnected: ", conn.isconnected())
