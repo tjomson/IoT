@@ -32,11 +32,16 @@ def on_bt_rx(gattChar, message):
             print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
             # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
             if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == "tjoms_{}".format(identifier+1):
-                print(adv.mac)
-                conn = bt.connect(adv.mac)
-                print("isConnected: ", conn.isconnected())
+                while True:
+                    try:
+                        print("trying", adv.mac)
+                        conn = bt.connect(adv.mac)
+                        print("isConnected: ", conn.isconnected())
+                        break
+                    except:
+                        continue
                 break
-        time.sleep(0.5)
+        time.sleep(0.05)
     bt.stop_scan()
     for service in conn.services():
         time.sleep(0.050)
@@ -51,7 +56,9 @@ def on_bt_rx(gattChar, message):
                 print('char {} value = {}'.format(char.uuid(), char.read()))
                 chr = char
     print("transfer {0} sending {1}".format(identifier, mes))
-    chr.write(mes.encode())
+    chr.write("{0} {1}".format(mes, identifier).encode())
+    conn.disconnect()
+    bt.advertise(True)
 
 
 myChr.callback(trigger=Bluetooth.CHAR_WRITE_EVENT, handler=on_bt_rx)
