@@ -19,11 +19,10 @@ while True:
             conn = bt.connect(adv.mac)
             print("isConnected: ", conn.isconnected())
             break
-    time.sleep(0.5)
+    time.sleep(0.05)
 bt.stop_scan()
 time.sleep(1)
 print("scan stopped", bt.isscanning())
-print(len(conn.services()))  # gets stuck here
 print("checking services")
 for service in conn.services():
     time.sleep(0.050)
@@ -41,7 +40,7 @@ for service in conn.services():
 print("done with services")
 # while True:
 temperature = ((machine.temperature() - 32) / 1.8)
-message = "avg temp: {} C".format(temperature)
+message = "avg temp: {0} C {1}".format(temperature, identifier)
 print('sending: ', message)
 chr.write(message.encode())
 print("disconnecting")
