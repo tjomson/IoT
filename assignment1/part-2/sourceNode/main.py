@@ -53,4 +53,4 @@ while True:
     print("disconnecting")
     conn.disconnect()
     print("isConnected: ", conn.isconnected())
-    time.sleep(20)
+    time.sleep(60)
