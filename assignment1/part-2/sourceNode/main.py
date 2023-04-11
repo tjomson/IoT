@@ -20,9 +20,8 @@ while True:
             print("isConnected: ", conn.isconnected())
             break
     time.sleep(0.5)
-time.sleep
 bt.stop_scan()
-time.sleep(2)
+time.sleep(1)
 print("scan stopped", bt.isscanning())
 print(len(conn.services()))  # gets stuck here
 print("checking services")
@@ -40,9 +39,11 @@ for service in conn.services():
             chr = char
             svc = service
 print("done with services")
-while True:
-    temperature = ((machine.temperature() - 32) / 1.8)
-    message = "avg temp: {} C".format(temperature)
-    print('sending: ', message)
-    chr.write(message.encode())
-    time.sleep(5)
+# while True:
+temperature = ((machine.temperature() - 32) / 1.8)
+message = "avg temp: {} C".format(temperature)
+print('sending: ', message)
+chr.write(message.encode())
+print("disconnecting")
+conn.disconnect()
+print("isConnected: ", conn.isconnected())

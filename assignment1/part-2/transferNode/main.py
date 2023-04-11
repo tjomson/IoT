@@ -9,32 +9,6 @@ identifier = 1
 print("starting")
 bt = Bluetooth()
 
-print("scanning")
-bt.start_scan(-1)
-while True:
-    adv = bt.get_adv()
-    if adv:
-        print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
-        # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
-        if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == "tjoms_{}".format(identifier+1):
-            conn = bt.connect(adv.mac)
-            print("isConnected: ", conn.isconnected())
-            break
-    time.sleep(0.5)
-bt.stop_scan()
-for service in conn.services():
-    time.sleep(0.050)
-    if type(service.uuid()) == bytes:
-        print('Reading chars from service = {}'.format(service.uuid()))
-    else:
-        print("reading chars ", service.uuid())
-    chars = service.characteristics()
-    for char in chars:
-        if (char.properties() & Bluetooth.PROP_WRITE):
-            print('char {} value = {}'.format(char.uuid(), char.read()))
-            nextChr = char
-            # svc = service
-
 print("setting adv")
 SERVICE_UUID = uhashlib.sha256(
     "gsghrsyksvb45676ryj5768").digest()[:16]
@@ -48,8 +22,36 @@ myChr = svc.characteristic(uuid=10904, value='default2',
 
 def on_bt_rx(gattChar, message):
     mes = message[1].decode()
-    nextChr.write(mes.encode())
+    # nextChr.write(mes.encode())
     print('transfer received: ', mes)
+    bt.advertise(False)
+    bt.start_scan(-1)
+    while True:
+        adv = bt.get_adv()
+        if adv:
+            print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
+            # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
+            if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == "tjoms_{}".format(identifier+1):
+                print(adv.mac)
+                conn = bt.connect(adv.mac)
+                print("isConnected: ", conn.isconnected())
+                break
+        time.sleep(0.5)
+    bt.stop_scan()
+    for service in conn.services():
+        time.sleep(0.050)
+        print("service loop")
+        if type(service.uuid()) == bytes:
+            print('Reading chars from service = {}'.format(service.uuid()))
+        else:
+            print("reading chars ", service.uuid())
+        chars = service.characteristics()
+        for char in chars:
+            if (char.properties() & Bluetooth.PROP_WRITE):
+                print('char {} value = {}'.format(char.uuid(), char.read()))
+                chr = char
+    print("transfer {0} sending {1}".format(identifier, mes))
+    chr.write(mes.encode())
 
 
 myChr.callback(trigger=Bluetooth.CHAR_WRITE_EVENT, handler=on_bt_rx)
