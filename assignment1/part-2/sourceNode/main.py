@@ -14,12 +14,16 @@ while True:
     if adv:
         print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
         # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
-        if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == f"tjoms_{identifier+1}":
+        if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == "tjoms_{}".format(identifier+1):
             print(adv.mac)
             conn = bt.connect(adv.mac)
             print("isConnected: ", conn.isconnected())
             break
-    time.sleep(0.1)
+    time.sleep(0.5)
+time.sleep
+bt.stop_scan()
+time.sleep(2)
+print("scan stopped", bt.isscanning())
 print(len(conn.services()))  # gets stuck here
 print("checking services")
 for service in conn.services():

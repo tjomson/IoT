@@ -38,7 +38,8 @@ print("starting")
 # Initialize the Bluetooth interface and set the device name
 bt = Bluetooth()
 print("setting adv")
-bt.set_advertisement(name=f"tjoms_{identifier}", service_uuid=SERVICE_UUID)
+bt.set_advertisement(name="tjoms_{}".format(
+    identifier), service_uuid=SERVICE_UUID)
 print("adv set")
 
 # Define the Bluetooth service and characteristic
