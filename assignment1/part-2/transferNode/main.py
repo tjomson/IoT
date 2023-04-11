@@ -1,12 +1,11 @@
 from network import Bluetooth
 import time
-import machine
 import uhashlib
 
 
+print("starting")
 identifier = 1
 
-print("starting")
 bt = Bluetooth()
 
 print("setting adv")
@@ -22,27 +21,29 @@ myChr = svc.characteristic(uuid=10904, value='default2',
 
 def on_bt_rx(gattChar, message):
     mes = message[1].decode()
-    # nextChr.write(mes.encode())
     print('transfer received: ', mes)
     bt.advertise(False)
     bt.start_scan(-1)
-    while True:
-        adv = bt.get_adv()
-        if adv:
-            print(bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL))
-            # Use name of server to determine which to connect to. Use names like node1, node2... for the chain
+    conn_set = False
+    while not conn_set:
+        print("looping")
+        adv_list = bt.get_advertisements()
+        for adv in adv_list:
             if bt.resolve_adv_data(adv.data, Bluetooth.ADV_NAME_CMPL) == "tjoms_{}".format(identifier+1):
                 while True:
                     try:
                         print("trying", adv.mac)
                         conn = bt.connect(adv.mac)
                         print("isConnected: ", conn.isconnected())
+                        conn_set = True
                         break
                     except:
                         continue
                 break
-        time.sleep(0.05)
+        time.sleep(0.1)
+
     bt.stop_scan()
+    time.sleep(1)
     for service in conn.services():
         time.sleep(0.050)
         print("service loop")
