@@ -13,4 +13,4 @@ Exercises and assignments for course Internet of Things, spring 2023.
 ## Assignments
 
 - 1: [Multi-hop networks](https://github.com/tjomson/IoT/tree/master/assignment1) ([assignment description](https://github.com/tjomson/IoT/blob/master/assignment1/assignment1-description.pdf))
-- 2: [CO2 sensors in a classroom](https://github.com/tjomson/IoT/tree/master/assignment2) ([assignment description](https://github.com/tjomson/IoT/blob/master/assignment2/assignment2-description.pdf))
+- 2: [CO2 sensors in a classroom](https://github.com/tjomson/IoT/tree/master/assignment2) ([miscellaneous file](https://github.com/tjomson/IoT/tree/master/assignment2-misc)) ([assignment description](https://github.com/tjomson/IoT/blob/master/assignment2/assignment2-description.pdf))
