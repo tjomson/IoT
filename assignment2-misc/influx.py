@@ -20,7 +20,7 @@ write_api = write_client.write_api(write_options=SYNCHRONOUS)
 query_api = client.query_api()
 query = f'from(bucket:"{bucket}")\
 |> range(start: -10d)\
-|> filter(fn: (r) => (r.dev_eui == "808ABCDEF0ABCDEF" or r.dev_eui == "804ABCDEF0ABCDEF") and r._measurement == "message")'
+|> filter(fn: (r) => (r.dev_eui == "809ABCDEF0ABCDEF" or r.dev_eui == "804ABCDEF0ABCDEF") and r._measurement == "message")'
 result = query_api.query(org=org, query=query)
 for table in result:
     for record in table.records:

@@ -15,14 +15,15 @@ while True:
 
         pycom.heartbeat(False)
 
-        mac = "804ABCDEF0ABCDEF"
+        mac = "809ABCDEF0ABCDEF"
         dev_eui = ubinascii.unhexlify(mac)
 
         lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
         app_eui = ubinascii.unhexlify('0000000000000000')
         # 1257279ab3b44855ad3260a6c3123f74
-        # 9C32D2E1F603B786812CBCA37E1C76A0
-        app_key = ubinascii.unhexlify('9C32D2E1F603B786812CBCA37E1C76A0')
+        # 9C32D2E1F603B786812CBCA37E1C76A0 for 804
+        # C7FB9C5899356C770662E3C9E0742D13 for 809
+        app_key = ubinascii.unhexlify('C7FB9C5899356C770662E3C9E0742D13')
         lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0)
         while not lora.has_joined():
             time.sleep(1)
@@ -40,6 +41,7 @@ while True:
         print(mes)
         s.send(str.encode(mes))
         machine.deepsleep(945000) # 14 min, 45 sec
+        # machine.deepsleep(25000) # 14 min, 45 sec
     except:
         print("failed")
         time.sleep(0.5)
