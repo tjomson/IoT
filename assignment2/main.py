@@ -1,20 +1,21 @@
-import pycom
-import time
-from machine import I2C
-from scd30 import SCD30
-from network import LoRa
-import ubinascii
-import socket
-import machine
-
 while True:
+    print("trying")
     try: 
+        import pycom
+        import time
+        from machine import I2C
+        from scd30 import SCD30
+        from network import LoRa
+        import ubinascii
+        import socket
+        import machine
+
         i2cbus = I2C(2)  # bus 0 does not work for some reason
         scd30 = SCD30(i2cbus, 0x61)
 
         pycom.heartbeat(False)
 
-        mac = "804abcdef0abcdef"
+        mac = "804ABCDEF0ABCDEF"
         dev_eui = ubinascii.unhexlify(mac)
 
         lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
@@ -32,12 +33,13 @@ while True:
         s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
 
         while scd30.get_status_ready() != 1:
+            print("not ready")
             time.sleep_ms(200)
         res = scd30.read_measurement()
-        mes = "CO2: %s, temp: %s, humidity: %s" % res
+        mes = "%s, %s, %s" % res # CO2, temp, humi
         print(mes)
         s.send(str.encode(mes))
-        machine.deepsleep(5000)
+        machine.deepsleep(945000) # 14 min, 45 sec
     except:
         print("failed")
         time.sleep(0.5)
